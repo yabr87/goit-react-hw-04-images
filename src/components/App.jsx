@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
@@ -58,19 +58,19 @@ const App = () => {
     setTotalPages(pages);
   };
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setPage(prevPage => prevPage + 1);
-  };
+  }, []);
 
-  const openModal = largeImageURL => {
+  const openModal = useCallback(largeImageURL => {
     setImgModal(largeImageURL);
     setShowModal(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setShowModal(false);
     setImgModal('');
-  };
+  }, []);
 
   return (
     <div className="AppWrapper">

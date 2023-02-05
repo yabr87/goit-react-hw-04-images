@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import ImageGalleryItem from './ImageGalleryItem';
 import s from './ImageGallery.module.css';
@@ -13,7 +14,7 @@ const ImageGallery = ({ items, openModal }) => {
       openModal={() => openModal(largeImageURL)}
     />
   ));
-
+  console.log('update gallery');
   return <ul className={s.ImageGallery}>{elements}</ul>;
 };
 
@@ -26,4 +27,4 @@ ImageGallery.defaultProps = {
   items: [],
 };
 
-export default ImageGallery;
+export default memo(ImageGallery);
