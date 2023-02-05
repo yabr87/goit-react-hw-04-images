@@ -4,6 +4,8 @@ import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import Loader from './Loader';
 import Modal from './Modal';
+import ErrorMessage from './ErrorMessage';
+import Spiner from './Spiner';
 
 import { getGalleryItems } from './utils/galleryApi';
 
@@ -58,30 +60,38 @@ const App = () => {
     setTotalPages(pages);
   };
 
-  const loadMore = useCallback(() => {
-    setPage(prevPage => prevPage + 1);
-  }, []);
-
   const openModal = useCallback(largeImageURL => {
+    //useCallback щоб не перерендерювати галерею підчас відкриттся мадалки
     setImgModal(largeImageURL);
     setShowModal(true);
   }, []);
 
-  const closeModal = useCallback(() => {
+  const closeModal = () => {
     setShowModal(false);
     setImgModal('');
-  }, []);
+  };
+
+  const loadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  const showLoadMore = () => {
+    if (loading) {
+      return false;
+    }
+    if (page !== totalPages && Boolean(totalPages)) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className="AppWrapper">
       <Searchbar onSubmit={searchImage} />
       <ImageGallery items={items} openModal={openModal} />
-      <Loader
-        page={page}
-        loading={loading}
-        totalPages={totalPages}
-        onBtnClick={loadMore}
-      />
+      {showLoadMore() && <Loader onBtnClick={loadMore} />}
+      {loading && <Spiner loading={loading} />}
+      {!totalPages && <ErrorMessage />}
       {showModal && <Modal close={closeModal} bigImg={imgModal} />}
     </div>
   );

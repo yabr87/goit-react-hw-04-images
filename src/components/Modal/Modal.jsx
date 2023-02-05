@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import s from './Modal.module.css';
@@ -6,24 +6,35 @@ import s from './Modal.module.css';
 const modalRoot = document.querySelector('#modal-root');
 
 const Modal = ({ close, bigImg }) => {
-  const closeModal = useCallback(
-    ({ target, currentTarget, code }) => {
-      if (target === currentTarget || code === 'Escape') {
-        close();
-      }
-    },
-    [close]
-  );
+  // const closeModal = ({ target, currentTarget, code }) => {
+  //   if (target === currentTarget || code === 'Escape') {
+  //     close();
+  //   }
+  // };
+
+  /*тепер тут 2 фінкції а була одна не зрощумів навіщо*/
+
+  const closeModalonClick = ({ target, currentTarget }) => {
+    if (target === currentTarget) {
+      close();
+    }
+  };
 
   useEffect(() => {
-    document.addEventListener('keydown', closeModal);
-    return () => {
-      window.removeEventListener('keydown', closeModal);
+    const closeModalOnKeypress = ({ code }) => {
+      if (code === 'Escape') {
+        close();
+      }
     };
-  }, [closeModal]);
+
+    document.addEventListener('keydown', closeModalOnKeypress);
+    return () => {
+      window.removeEventListener('keydown', closeModalOnKeypress);
+    };
+  }, [close]);
 
   return createPortal(
-    <div className={s.overlay} onClick={closeModal}>
+    <div className={s.overlay} onClick={closeModalonClick}>
       <div className={s.modal}>
         <img src={bigImg} alt="modalimage" />
       </div>
@@ -31,6 +42,7 @@ const Modal = ({ close, bigImg }) => {
     modalRoot
   );
 };
+
 Modal.propTypes = {
   bigImg: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
